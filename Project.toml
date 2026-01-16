@@ -1,0 +1,13 @@
+name = "AttenuatedTotalReflectance"
+uuid = "f02c0839-a2eb-4fa1-82b6-af9d507b39f4"
+authors = ["Conor O'Donnell"]
+version = "1.0.0-DEV"
+
+[compat]
+julia = "1.10.10"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
