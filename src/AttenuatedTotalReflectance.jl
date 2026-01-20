@@ -1,5 +1,7 @@
 module AttenuatedTotalReflectance
 
-# Write your package code here.
+include("Frenel_Equations.jl")
+include("utils.jl")
+
 
 end
