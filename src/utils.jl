@@ -30,6 +30,59 @@ mutable struct layer
 end
 
 """
+Helper function to assemble an array of layer objects to hold information on the material layers of the system to be simulated with the addition of perfectly matched layer.
+
+Args:
+
+    - `number_layers::Int64`: Number of layers in the system 
+
+Return:
+
+    - `stack`: Array of layer objects of length number_layers+1
+
+Mathematical Note:
+
+Perfectly matched layer is required to absorb reflections from the last layer of the system. Both the PML must be larger than the thin films simulated to avoid oscillations in the output of the fresnel calculations
+
+Example:
+
+    ```jldoctest
+    
+        julia> thin_film_system = material_stack(3)
+
+        julia> thin_film_system[2] = layer("Silver", 0.051585, 3.9046, 20e-9)
+
+        julia> thin_film_system[2].material
+
+        julia> thin_film_system[2].thickness
+    ```
+"""
+
+
+function material_stack(number_layers::Int64)
+    # Sets up frame work of arbitrary length
+    # First and last layers are large compared to rest of stack
+    # Last layer (number_layers) must be a Dielectric and PML must be added after this layer (number_layers+1)
+    # Create an uninitialise array to hold Layer information
+    stack = Array{Layer, 1}(undef, number_layers+1)
+    
+    # Assign layers to the stack
+    for i in 1:number_layers
+        if i == 1
+            stack[i] = Layer("Substrate", 0.0, 0.0, 10e-6 +1e-7) # Make the substrate much larger than thin films
+        elseif i == number_layers
+            stack[i] = Layer("Last Layer", 0.0, 0.0, 5e-6)
+        else
+            stack[i] = Layer("Material Name", 0.0, 0.0, 0.0)
+        end
+        
+    end
+    stack[end] = Layer("PML", 0.0, 0.0, 1e-6)
+    return stack
+end
+
+
+"""
 Helper function to take n & k values to produce singular complex refractive index
 
 Args:
