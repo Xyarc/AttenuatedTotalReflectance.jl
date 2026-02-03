@@ -2,9 +2,6 @@
 using StaticArrays
 using LinearAlgebra
 
-# Add utilities
-include("utils.jl")
-
 
 # ---- Internal Calculation Functions -----
 
