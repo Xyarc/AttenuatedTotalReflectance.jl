@@ -1,4 +1,6 @@
 using AttenuatedTotalReflectance
+using LinearAlgebra
+using StaticArrays
 using Test
 
 @testset "AttenuatedTotalReflectance.jl" begin
@@ -220,4 +222,99 @@ using Test
 
     end
 
+
+    @testset "Core Physics & TMM" begin
+        
+        @testset "Target Layer Identification" begin
+            # Setup a standard 4-layer stack
+            stack = [
+                layer("Prism", 1.5, 0.0, 1e-6),
+                layer("Gold", 0.18, 3.0, 50e-9,),
+                layer("FlowCell", 1.33, 0.0, 1e-6),
+                layer("PML", 1e-6, 1.0, 0.0)
+            ]
+
+            @testset "Manual Selection" begin
+                # Specifically target layer above the metal layer (Index 2)
+                idx, n = target_layer(stack, 0.0, 2)
+                @test idx == 3
+                @test n ≈ 1.33 + 0im
+            end
+
+            @testset "No Layer Specified" begin
+                # If 0 is passed, it should pick length(stack) - 1 (The FlowCell/Index 3)
+                
+                @test_throws ArgumentError target_layer(stack, 0.0, 0)
+            end
+
+            @testset "Inference" begin
+                # Crucial for the speed of your ATR loops
+                @test (@inferred target_layer(stack, 0.0, 2)) isa Tuple{Int,ComplexF64}
+            end
+        end
+
+        # Mock Data for testing
+        n_air = 1.0 + 0.0im
+        n_glass = 1.5 + 0.0im
+        wavelength = 633.0
+        theta_30 = deg2rad(30.0)
+        theta_glass = snells_law(theta_30, n_air, n_glass)
+
+        @testset "Fresnel Coefficients" begin
+            # Test normal incidence (S and P should be identical at 0 degrees)
+            rs = refl_coeff_S(0.0, n_air, 0.0, n_glass)
+            rp = refl_coeff_P(0.0, n_air, 0.0, n_glass)
+            @test rs ≈ rp 
+            @test abs2(rs) ≈ ((1.5 - 1.0) / (1.5 + 1.0))^2
+
+        end
+
+        @testset "Transfer Matrix Properties" begin
+            # Simple 3-layer stack: Air / 50nm Gold / Air
+            # Note: Using your Layer struct
+            stack = [
+                layer("Air", 0.0, 1.0, 0.0),
+                layer("Gold", 50.0, 0.18, 3.0),
+                layer("Air", 0.0, 1.0, 0.0)
+            ]
+
+            C, D0, Dj, t_tot, t0, tj = compute_transfer_coefficients(stack, theta_30, wavelength)
+
+            @test C isa SMatrix{2,2,ComplexF64}
+            # Determinant of a T-matrix for non-magnetic media should be the ratio of admittance
+            # For simple cases, we just check it's not zero and is type-stable
+            @test !iszero(det(C))
+        end
+
+        @testset "ATR Simulation (Angular)" begin
+            # Kretschmann Configuration: Prism (1.5) / Gold (50nm) / Air (1.0)
+            # Resonance for Gold at 633nm is usually around 43-45 degrees
+            prism_stack = [
+                layer("Prism", 0.0, 1.5, 0.0),
+                layer("Gold", 50.0, 0.18, 3.4), # typical nk for Gold
+                layer("Air", 0.0, 1.0, 0.0)
+            ]
+
+            angles = deg2rad.(collect(30.0:0.1:50.0))
+            R, T, fx, fy, fz, fp = angular_ATR(prism_stack, angles, 633.0)
+
+            @test length(R) == length(angles)
+            @test all(0 .<= R .<= 1.0)
+            @test all(0 .<= T .<= 1.0)
+
+            # Check that field enhancement fp is non-negative
+            @test all(fp .>= 0.0)
+
+            # Physical check: At 30 degrees (below critical angle ~41.8), T should be > 0
+            @test T[1] > 0.1
+            # Physical check: At 50 degrees (TIR), T should be near 0
+            @test T[end] < 1e-5
+        end
+
+        @testset "Inference & Performance" begin
+            stack = [layer("Test", 10.0, 1.5, 0.0)]
+            # Ensure no type-instability in the core loop
+            @test (@inferred compute_transfer_coefficients(stack, 0.5, 633.0)) isa Tuple
+        end
+    end
 end

@@ -219,3 +219,36 @@ function nk_to_epsilon(n::Float64, k::Float64)
 
     return e1, e2
 end
+
+"""
+    target_layer(stack, d, metal_layer_index)
+
+Helper function which evaluates the correct layer and its complex refractive index for field enhancement 
+calculations.
+
+# Arguments
+- `stack::Vector{Layer}`: The multilayer stack.
+- `depth::Number`: Distance above the layer of intrest (0.0 represents the interface).
+- `layer_of_intrest::Int`: The index of the layer of interest (e.g., a gold thin film). 
+  
+
+# Returns
+- `(layer_idx, n_complex)`: A tuple containing the resolved layer index and its 
+  complex refractive index.
+"""
+function target_layer(stack::Vector, depth::Float64, layer_of_intrest::Int64)
+    #Computes the layer in which depth belongs and return that layer + refractive index of that layer
+    layer_of_intrest < 1 && throw(ArgumentError("Must provide a layer of interest to compute electric field enhancement!"))
+    i = 1
+    target_layer = layer_of_intrest
+    stack_h = stack[target_layer+i].thickness
+
+    while depth > stack_h
+        i += 1
+        stack_h += stack[target_layer+i].thickness
+    end
+    # Sets the target layer from the metal interface to the layer which depth z belongs and calculates refractive index of this layer
+    target_layer += i
+    n_target = complex_n(stack[target_layer].n, stack[target_layer].k) # Refractive index of the layer depth d belongs
+    return target_layer, n_target
+end

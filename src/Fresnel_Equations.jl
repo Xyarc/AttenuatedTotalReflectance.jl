@@ -86,11 +86,11 @@ This algorithm is based on the work by Koji Ohta and Hatsuo Ishida (DOI: 10.1364
 
 This method also assumes that the system is not magnetic
 """
-function compute_transfer_coefficents(stack::Vector, theta::Number, wavelength::Number, layer_j::Int64 = 0; S::Bool = false)
+function compute_transfer_coefficients(stack::Vector, theta::Number, wavelength::Number, layer_j::Int64 = 0; S::Bool = false)
     
     # Determine if P or S polarisation function should be used
-    refl_func  = S ? Refl_Coeff_S : Refl_Coeff_P
-    trans_func = S ? Trans_Coeff_S : Trans_Coeff_P
+    refl_func  = S ? refl_coeff_S : refl_coeff_P
+    trans_func = S ? trans_coeff_S : trans_coeff_P
     
     # 2. Initialise Variables with Static Types for Efficiency
     # SMatrix{Rows, Cols, Type, TotalElements}
@@ -200,7 +200,7 @@ incident field intensity.
 
 """
 function angular_ATR(stack::Vector, theta_range::AbstractVector, wavelength::Number, 
-                             d::Number = 0.0, metal_layer::Int = 0; S::Bool = false)
+                             d::Number = 0.0, metal_layer::Int = 1; S::Bool = false)
     
     # 1. Pre-allocate output arrays
     num_pts      = length(theta_range)
@@ -211,8 +211,8 @@ function angular_ATR(stack::Vector, theta_range::AbstractVector, wavelength::Num
     f_z          = zeros(Float64, num_pts)
     f_p          = zeros(Float64, num_pts)
 
-    n0    = Complex_n(stack[1].n, stack[1].k)
-    n_end = Complex_n(stack[end].n, stack[end].k)
+    n0    = complex_n(stack[1].n, stack[1].k)
+    n_end = complex_n(stack[end].n, stack[end].k)
     layer_target, n_target = target_layer(stack, d, metal_layer)
 
     e0_f = 1.0 + 0.0im 
@@ -297,7 +297,7 @@ incident field intensity.
 
 """
 function wavelength_ATR(stack::Vector, theta::Number, wavelength_range::AbstractVector, 
-                             d::Number = 0.0, metal_layer::Int = 0; S::Bool = false)
+                             d::Number = 0.0, metal_layer::Int = 1; S::Bool = false)
     
     # 1. Pre-allocate output arrays
     num_pts      = length(wavelength_range)
@@ -308,17 +308,17 @@ function wavelength_ATR(stack::Vector, theta::Number, wavelength_range::Abstract
     f_z          = zeros(Float64, num_pts)
     f_p          = zeros(Float64, num_pts)
 
-    n0    = Complex_n(stack[1].n, stack[1].k)
-    n_end = Complex_n(stack[end].n, stack[end].k)
+    n0    = complex_n(stack[1].n, stack[1].k)
+    n_end = complex_n(stack[end].n, stack[end].k)
     layer_target, n_target = target_layer(stack, d, metal_layer)
 
     e0_f = 1.0 + 0.0im 
 
     for (i, wavelength) in enumerate(wavelength_range)
-        angle_end    = snells_law(angle, n0, n_end)
-        theta_target = snells_law(angle, n0, n_target)
+        angle_end    = snells_law(theta, n0, n_end)
+        theta_target = snells_law(theta, n0, n_target)
         
-        a = real((conj(n_end) * cos(angle_end)) / (conj(n0) * cos(angle)))
+        a = real((conj(n_end) * cos(angle_end)) / (conj(n0) * cos(theta)))
 
         C, D0, Dj, t_total, t0, tj = compute_transfer_coefficients(
             stack, theta, wavelength, layer_target; S=S

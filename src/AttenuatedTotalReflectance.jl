@@ -7,7 +7,12 @@ export
     snells_law,
     epsilon_to_nk,
     nk_to_epsilon,
-    compute_transfer_coefficents,
+    target_layer,
+    refl_coeff_S,
+    refl_coeff_P,
+    trans_coeff_S,
+    trans_coeff_P,
+    compute_transfer_coefficients,
     angular_ATR,
     wavelength_ATR
 
