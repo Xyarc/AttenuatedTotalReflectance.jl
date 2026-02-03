@@ -1,3 +1,4 @@
 [deps]
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 AttenuatedTotalReflectance = "f02c0839-a2eb-4fa1-82b6-af9d507b39f4"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"

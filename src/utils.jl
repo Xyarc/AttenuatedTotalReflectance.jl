@@ -9,7 +9,7 @@ Arguments:
 
     - `k::Float64`: Extinction coefficient of the current layer
 
-    - `thickness::Float64`: Thickness of the current layer in meters [m]
+    - `thickness::Float64`: Thickness of the current layer in meters [m]. Must be positive.
 
 Example:
 
@@ -28,6 +28,11 @@ mutable struct layer
     n::Float64
     k::Float64
     thickness::Float64
+
+    function layer(material, n, k, thickness)
+        thickness < 0 && throw(ArgumentError("Thickness cannot be negative"))
+        new(material, n, k, thickness)
+    end
 end
 
 """
@@ -35,7 +40,7 @@ Helper function to assemble an array of layer objects to hold information on the
 
 Arguments:
 
-    - `number_layers::Int64`: Number of layers in the system 
+    - `materials::Vector{<:NamedTuple}`: A vector containing information on the materials to use. (Name, n, k, thickness [m])
 
 Return:
 
@@ -49,37 +54,56 @@ Example:
 
     ```jldoctest
     
-        julia> thin_film_system = material_stack(3)
+        julia> mats = [
+            (material="Glass", n=1.5, k=0.0, thickness=5e-6),
+            (material="Gold", n=0.18, k=3.0, thickness=50e-9),
+            (material="Air", n=1.0, k=0.0, thickness=5e-6),
+        ]
 
-        julia> thin_film_system[2] = layer("Silver", 0.051585, 3.9046, 20e-9)
+        julia> stack = material_stack(mats)
 
-        julia> thin_film_system[2].material
-        "Silver"
-        julia> thin_film_system[2].thickness
-        20e-9
+        julia> stack[1].material
+        "Substrate: Glass"
+        julia> stack[2].n
+        0.18
+        julia> stack[2].thickness
+        50e-9
     ```
 """
 
 
-function material_stack(number_layers::Int64)
-    # Sets up frame work of arbitrary length
-    # First and last layers are large compared to rest of stack
-    # Last layer (number_layers) must be a Dielectric and PML must be added after this layer (number_layers+1)
+function material_stack(materials::Vector{<:NamedTuple})
+    # Sets up frame work of arbitrary length based on an vector of input materials
+    # First and last layers normally should large compared to rest of stack
+    # Last layer must be a Dielectric and PML must be added after this layer (number_layers+1)
     # Create an uninitialise array to hold Layer information
-    stack = Array{Layer, 1}(undef, number_layers+1)
+    
+    stack = Array{layer, 1}(undef, length(materials)+1)
     
     # Assign layers to the stack
-    for i in 1:number_layers
+    for i in 1:length(materials)
+        m = materials[i]
         if i == 1
-            stack[i] = Layer("Substrate", 0.0, 0.0, 10e-6 +1e-7) # Make the substrate much larger than thin films
-        elseif i == number_layers
-            stack[i] = Layer("Last Layer", 0.0, 0.0, 5e-6)
+            # Throw warning if substrate layer is thin
+            if m.thickness < 1e-6
+                 # Make the substrate much larger than thin films
+                print("Warning: Substrate layer is thin!")
+            end
+        
+            stack[i] = layer("Substrate: $(m.material)", m.n, m.k, m.thickness)
+       
         else
-            stack[i] = Layer("Material Name", 0.0, 0.0, 0.0)
+            stack[i] = layer(m.material, m.n, m.k, m.thickness)
         end
         
     end
-    stack[end] = Layer("PML", 0.0, 0.0, 1e-6)
+
+    if stack[end-1].thickness < 1e-6
+        print("Warning: Final dielectric layer is thin!")
+    end
+    # Add PML to the end of the simulation space
+
+    stack[end] = layer("PML", stack[end - 1].n + 1e-5, 0.0, 1e-6)
     return stack
 end
 
