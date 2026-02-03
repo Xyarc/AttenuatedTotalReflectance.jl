@@ -1,7 +1,7 @@
 """
 Struct object used to hold information on each layer in the overall system to be simulated
 
-Args:
+Arguments:
 
     - `material::String`: Name of the current layer
 
@@ -18,8 +18,9 @@ Example:
         julia> thin_film = layer("Silver", 0.051585, 3.9046, 20e-9)
 
         julia> thin_film.n
-
+        0.051585
         julia> thin_film.thickness
+        20e-9
     ```
 """
 mutable struct layer
@@ -32,7 +33,7 @@ end
 """
 Helper function to assemble an array of layer objects to hold information on the material layers of the system to be simulated with the addition of perfectly matched layer.
 
-Args:
+Arguments:
 
     - `number_layers::Int64`: Number of layers in the system 
 
@@ -53,8 +54,9 @@ Example:
         julia> thin_film_system[2] = layer("Silver", 0.051585, 3.9046, 20e-9)
 
         julia> thin_film_system[2].material
-
+        "Silver"
         julia> thin_film_system[2].thickness
+        20e-9
     ```
 """
 
@@ -85,7 +87,7 @@ end
 """
 Helper function to take n & k values to produce singular complex refractive index
 
-Args:
+Arguments:
     - n: Refractive index
     - k: Extinction coefficient
 
@@ -97,6 +99,7 @@ Example:
 
         ```jldoctest
         julia> complex_n(0.051585, 3.9046)
+        0.051585 + 3.9046im
         ```
 """
 function complex_n(n::Float64, k::Float64=0.0)
@@ -106,13 +109,13 @@ end
 """
 Implimentation of Snell's Law to compute the angle of refraction. Computes the resulting angle due to the refraction between two materials of differing refractive indices. Returned angle can be complex.
 
-Args:
+Arguments:
 
     - `theta_in::Number`: Angle of the incident light ray traveling through a material of refractive index, n_in, with repect to the normal prerpendicular to the interface.
     - `n_in::Number`: Refractive index of the first material the light passes through. 
     - `n_out::Number`: Refractive index of the second material the light passes through. 
 
-    All Args may be complex
+    All Arguments may be complex
 
 Return:
 
@@ -124,8 +127,9 @@ Example:
     
     ```jldoctest
     julia> snells_law(pi/3, 1, 1.33)
-
+    0.7091 + 0.0im
     julia> snells_law(pi/4, 1.33, 1.0)
+    1.2239 + 0.0im
     ```    
 """
 function snells_law(theta_in::Number, n_in::Number, n_out::Number)
@@ -137,7 +141,7 @@ end
 """
 Helper function to convert dielectric constant into n and k.
     
-Args:
+Arguments:
 
     - `e1::Float64`: Real component of dielectric constant.
 
@@ -155,6 +159,7 @@ Example:
     
     ```jldoctest
     julia> epsilon_to_nk(-15.243, 0.40284)
+    (0.0516, 3.9045)
     ```
 """
 
@@ -168,7 +173,7 @@ end
 """
 Helper function to convert n and k into the components of the dielectric constant.
 
-Args:
+Arguments:
 
     - `n::Float64`: Refractive index
     - `k::Float64`: Extinction coefficient
@@ -184,6 +189,7 @@ Example:
     
     ```jldoctest
     julia> nk_to_epsilon(0.051585, 3.9046)
+    (-15.243, 0.402)
     ```
 """
 

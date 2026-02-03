@@ -6,8 +6,12 @@ Welcome to the documentation for AttenuatedTotalReflection.jl.
 ```@docs
 
 AttenuatedTotalReflectance.layer
-AttenuatedTotalReflectance.snells_law
+AttenuatedTotalReflectance.material_stack
 AttenuatedTotalReflectance.complex_n
+AttenuatedTotalReflectance.snells_law
+AttenuatedTotalReflectance.epsilon_to_nk
+AttenuatedTotalReflectance.nk_to_epsilon
 AttenuatedTotalReflectance.compute_transfer_coefficents
-
+AttenuatedTotalReflectance.angular_ATR
+AttenuatedTotalReflectance.wavelength_ATR
 ```

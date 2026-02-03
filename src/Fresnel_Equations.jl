@@ -198,15 +198,6 @@ incident field intensity.
 - For **S-polarization**, the field is perpendicular to the plane of incidence: 
   \$E_{total} = |E_y|\$.
 
-
-
-# Example
-```jldoctest
-julia> angles = range(0, stop=pi/2, length=500)
-
-julia> R, T, fx, fy, fz, fp, hy, kx = compute_angular_atr(my_stack, angles, 633.0e-9, 10e-9, 2; S=false)
-```
-
 """
 
 function angular_ATR(stack::Vector, theta_range::AbstractVector, wavelength::Number, 
@@ -304,15 +295,6 @@ incident field intensity.
   \$E_{total} = \\sqrt{|E_x|^2 + |E_z|^2}\$.
 - For **S-polarization**, the field is perpendicular to the plane of incidence: 
   \$E_{total} = |E_y|\$.
-
-
-
-# Example
-```jldoctest
-julia> angles = range(0, stop=pi/2, length=500)
-
-julia> R, T, fx, fy, fz, fp, hy, kx = compute_angular_atr(my_stack, angles, 633.0e-9, 10e-9, 2; S=false)
-```
 
 """
 
