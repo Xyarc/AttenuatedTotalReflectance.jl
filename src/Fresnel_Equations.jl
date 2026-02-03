@@ -199,7 +199,6 @@ incident field intensity.
   \$E_{total} = |E_y|\$.
 
 """
-
 function angular_ATR(stack::Vector, theta_range::AbstractVector, wavelength::Number, 
                              d::Number = 0.0, metal_layer::Int = 0; S::Bool = false)
     
@@ -297,7 +296,6 @@ incident field intensity.
   \$E_{total} = |E_y|\$.
 
 """
-
 function wavelength_ATR(stack::Vector, theta::Number, wavelength_range::AbstractVector, 
                              d::Number = 0.0, metal_layer::Int = 0; S::Bool = false)
     

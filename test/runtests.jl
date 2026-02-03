@@ -48,7 +48,43 @@ using Test
                 # Testing that the compiler can infer the Complex return type
                 @test (@inferred snells_law(0.5, 1.0, 1.5)) isa Complex
             end
+            @testset "Critical Angle Transition" begin
+                n_in = 1.5   # Denser (Glass)
+                n_out = 1.0  # Rarer (Air)
 
+                # 1. Calculate the theoretical critical angle
+                theta_c = asin(n_out / n_in) # ~0.7297 rad or 41.81°
+
+                @testset "Exactly at Critical Angle" begin
+                    result = snells_law(theta_c, n_in, n_out)
+
+                    # Real part must be 90 degrees
+                    @test real(result) ≈ π / 2
+                    # Imaginary part should be zero (or effectively zero)
+                    @test imag(result) ≈ 0.0 atol = 1e-15
+                end
+
+                @testset "Just Past Critical Angle (TIR)" begin
+                    # 0.001 radians beyond critical
+                    theta_tip = theta_c + 0.001
+                    result = snells_law(theta_tip, n_in, n_out)
+
+                    # Real part stays locked at 90 degrees (π/2)
+                    @test real(result) ≈ π / 2
+                    # Imaginary part must now be non-zero
+                    @test imag(result) > 0.0
+                end
+
+                @testset "Just Before Critical Angle" begin
+                    # 0.001 radians before critical
+                    theta_safe = theta_c - 0.001
+                    result = snells_law(theta_safe, n_in, n_out)
+
+                    # Should be purely real and slightly less than π/2
+                    @test real(result) < π / 2
+                    @test imag(result) ≈ 0.0 atol = 1e-15
+                end
+            end
             @testset "Edge Cases" begin
                 # Equal indices (theta_in should equal theta_out)
                 @test real(snells_law(0.8, 1.33, 1.33)) ≈ 0.8

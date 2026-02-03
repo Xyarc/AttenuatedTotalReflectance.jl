@@ -70,8 +70,6 @@ Example:
         50e-9
     ```
 """
-
-
 function material_stack(materials::Vector{<:NamedTuple})
     # Sets up frame work of arbitrary length based on an vector of input materials
     # First and last layers normally should large compared to rest of stack
@@ -186,7 +184,6 @@ Example:
     (0.0516, 3.9045)
     ```
 """
-
 function epsilon_to_nk(e1::Float64, e2::Float64)
     n = sqrt(0.5 * (sqrt(e1^2 + e2^2) + e1))
     k = sqrt(0.5 * (sqrt(e1^2 + e2^2) - e1))
@@ -216,7 +213,6 @@ Example:
     (-15.243, 0.402)
     ```
 """
-
 function nk_to_epsilon(n::Float64, k::Float64)
     e1 = n^2 - k^2
     e2 = 2 * n * k
