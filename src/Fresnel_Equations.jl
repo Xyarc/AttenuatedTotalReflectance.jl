@@ -79,7 +79,7 @@ A `Tuple` containing:
 
 # Mathematical Note
 The transfer matrix \$ M\$ for an interface and subsequent layer propagation is defined such that:
-\$\$\begin{pmatrix} E_{i-1}^+ \\ E_{i-1}^- \end{pmatrix} = M_i \begin{pmatrix} E_{i}^+ \\ E_{i}^- \end{pmatrix}\$\$
+\$ \begin{pmatrix} E_{i-1}^+ \\ E_{i-1}^- \end{pmatrix} = M_i \begin{pmatrix} E_{i}^+ \\ E_{i}^- \end{pmatrix}\$
 where \$ E^+\$ and \$ E^-\$ represent the forward and backward traveling electric field components.
 
 This algorithm is based on the work by Koji Ohta and Hatsuo Ishida (DOI: 10.1364/ao.29.001952)

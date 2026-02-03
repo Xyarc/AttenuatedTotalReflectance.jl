@@ -13,7 +13,7 @@ Arguments:
 
 Example:
 
-    ```jldoctest
+    ```julia-repl
     
         julia> thin_film = layer("Silver", 0.051585, 3.9046, 20e-9)
 
@@ -52,7 +52,7 @@ Perfectly matched layer is required to absorb reflections from the last layer of
 
 Example:
 
-    ```jldoctest
+    ```julia-repl
     
         julia> mats = [
             (material="Glass", n=1.5, k=0.0, thickness=5e-6),
@@ -119,7 +119,7 @@ Return:
 Example:
         Taking the refractive index of Silver @ 586.6 nm: n = 0.051585 & k = 3.9046
 
-        ```jldoctest
+        ```julia-repl
         julia> complex_n(0.051585, 3.9046)
         0.051585 + 3.9046im
         ```
@@ -147,7 +147,7 @@ Example:
 
     Taking the refractive index of Silver @ 586.6 nm: e1 = -15.243 & e2 = 0.40284
     
-    ```jldoctest
+    ```julia-repl
     julia> snells_law(pi/3, 1, 1.33)
     0.7091 + 0.0im
     julia> snells_law(pi/4, 1.33, 1.0)
@@ -179,7 +179,7 @@ Example:
 
     Taking the refractive index of Silver @ 586.6 nm: e1 = -15.243 & e2 = 0.40284
     
-    ```jldoctest
+    ```julia-repl
     julia> epsilon_to_nk(-15.243, 0.40284)
     (0.0516, 3.9045)
     ```
@@ -208,7 +208,7 @@ Example:
 
     Taking the refractive index of Silver @ 586.6 nm: n = 0.051585 & k = 3.9046
     
-    ```jldoctest
+    ```julia-repl
     julia> nk_to_epsilon(0.051585, 3.9046)
     (-15.243, 0.402)
     ```
