@@ -81,9 +81,9 @@ A `Tuple` containing:
 6. `tj::ComplexF64`: Partial transmission coefficient from `layer_j` to substrate.
 
 # Mathematical Note
-The transfer matrix $M$ for an interface and subsequent layer propagation is defined such that:
-$$\begin{pmatrix} E_{i-1}^+ \\ E_{i-1}^- \end{pmatrix} = M_i \begin{pmatrix} E_{i}^+ \\ E_{i}^- \end{pmatrix}$$
-where $E^+$ and $E^-$ represent the forward and backward traveling electric field components.
+The transfer matrix \$ M\$ for an interface and subsequent layer propagation is defined such that:
+\$\$\begin{pmatrix} E_{i-1}^+ \\ E_{i-1}^- \end{pmatrix} = M_i \begin{pmatrix} E_{i}^+ \\ E_{i}^- \end{pmatrix}\$\$
+where \$ E^+\$ and \$ E^-\$ represent the forward and backward traveling electric field components.
 
 This algorithm is based on the work by Koji Ohta and Hatsuo Ishida (DOI: 10.1364/ao.29.001952)
 
@@ -187,10 +187,10 @@ reflectivity, transmittance, and the electric field enhancement at a specific lo
 A `Tuple` containing eight vectors (each of length `length(theta_range)`):
 1.  `reflectivity`: Intensity reflection coefficient (R).
 2.  `transmittance`: Intensity transmission coefficient (T) into the final medium.
-3.  `f_x`: Normalized field intensity component $|E_x/E_0|^2$.
-4.  `f_y`: Normalized field intensity component $|E_y/E_0|^2$.
-5.  `f_z`: Normalized field intensity component $|E_z/E_0|^2$.
-6.  `f_p`: Total normalized field intensity enhancement $|E_{total}/E_0|^2$.
+3.  `f_x`: Normalized field intensity component \$|E_x/E_0|^2\$.
+4.  `f_y`: Normalized field intensity component \$|E_y/E_0|^2\$.
+5.  `f_z`: Normalized field intensity component \$|E_z/E_0|^2\$.
+6.  `f_p`: Total normalized field intensity enhancement \$|E_{total}/E_0|^2\$.
 
 
 # Physics Note
@@ -294,10 +294,10 @@ reflectivity, transmittance, and the electric field enhancement at a specific lo
 A `Tuple` containing eight vectors (each of length `length(theta_range)`):
 1.  `reflectivity`: Intensity reflection coefficient (R).
 2.  `transmittance`: Intensity transmission coefficient (T) into the final medium.
-3.  `f_x`: Normalized field intensity component $|E_x/E_0|^2$.
-4.  `f_y`: Normalized field intensity component $|E_y/E_0|^2$.
-5.  `f_z`: Normalized field intensity component $|E_z/E_0|^2$.
-6.  `f_p`: Total normalized field intensity enhancement $|E_{total}/E_0|^2$.
+3.  `f_x`: Normalized field intensity component \$|E_x/E_0|^2\$.
+4.  `f_y`: Normalized field intensity component \$|E_y/E_0|^2\$.
+5.  `f_z`: Normalized field intensity component \$|E_z/E_0|^2\$.
+6.  `f_p`: Total normalized field intensity enhancement \$|E_{total}/E_0|^2\$.
 
 
 # Physics Note
