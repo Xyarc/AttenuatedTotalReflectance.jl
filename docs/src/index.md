@@ -4,9 +4,10 @@ Welcome to the documentation for AttenuatedTotalReflection.jl.
 
 ## Exported Functions
 ```@docs
-AttenuatedTotalReflection.add
-AttenuatedTotalReflection.greet
+
 AttenuatedTotalReflectance.layer
 AttenuatedTotalReflectance.snells_law
 AttenuatedTotalReflectance.complex_n
 AttenuatedTotalReflectance.compute_transfer_coefficents
+
+```
