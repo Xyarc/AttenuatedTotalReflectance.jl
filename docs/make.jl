@@ -5,10 +5,17 @@ makedocs(
     sitename="AttenuatedTotalReflectance.jl",
     modules=[AttenuatedTotalReflectance],
     pages=[
+       
         "Home" => "index.md",
-        # Add more pages here as you grow
+        "Manual" => [
+            "Getting Started" => "guide.md",
+            "Physics Background" => "physics.md"
+        ],
+        "API Reference" => "api.md"  # You can put all your @docs blocks here
     ]
 )
+    
+
 
 deploydocs(
     repo="github.com/Xyarc/AttenuatedTotalReflectance.jl.git",

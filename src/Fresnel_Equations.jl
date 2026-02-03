@@ -172,7 +172,7 @@ reflectivity, transmittance, and the electric field enhancement at a specific lo
 # Arguments
 - `stack::Vector`: A vector of layer objects. Each must contain `.n`, `.k`, and `.thickness`. See `material_stack`
 - `theta_range::AbstractVector`: A range or vector of incident angles in radians.
-- `wavelength::Number`: The vacuum wavelength of the incident light.
+- `wavelength::Number`: The vacuum wavelength of the incident light in meters.
 - `d::Number`: The distance from the interface of the `target_layer` (in the same units 
   as `wavelength`) at which to compute the electric field.
 - `metal_layer::Int`: An index used by `Target_Layer` to identify the specific layer 
