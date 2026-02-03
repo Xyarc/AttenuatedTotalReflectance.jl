@@ -37,6 +37,7 @@ complex_n
 snells_law
 epsilon_to_nk
 nk_to_epsilon
+```
 
 ```@docs
 AttenuatedTotalReflectance.layer
@@ -49,3 +50,4 @@ AttenuatedTotalReflectance.target_layer
 AttenuatedTotalReflectance.compute_transfer_coefficients 
 AttenuatedTotalReflectance.angular_ATR
 AttenuatedTotalReflectance.wavelength_ATR
+```
