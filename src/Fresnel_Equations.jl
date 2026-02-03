@@ -17,24 +17,107 @@ function phase_change(wavelength::Float64, ni::ComplexF64, thickness::Float64, t
 end
 
 # Fresnel Reflection Coefficients for P & S polarisation
+"""
+    refl_coeff_S(theta_i, ni::ComplexF64, theta_j, nj::ComplexF64)
 
+Compute the Fresnel reflection coefficient \$r_s\$ at the interface between layer \$i\$ and layer \$j\$ 
+for **S-polarization** (TE mode).
+
+The reflection coefficient is defined by the formula:
+
+\$\$r_s = \frac{n_i cos(\theta_i) - n_j cos(\theta_j)}{n_i cos(\theta_i) + n_j cos(\theta_j)}\$\$
+
+# Arguments
+- `theta_i`: The angle of incidence in the first layer \$i\$ (radians).
+- `ni`: The complex refractive index of the incident layer \$n_i\$.
+- `theta_j`: The angle of refraction in the second layer \$j\$ (radians).
+- `nj`: The complex refractive index of the transmitted layer \$n_j\$.
+
+# Returns
+- A `ComplexF64` representing the amplitude reflection coefficient.
+
+# Example
+```julia
+ni = complex(1.5, 0.0)
+nj = complex(1.0, 0.0)
+theta_i = deg2rad(45.0)
+theta_j = snells_law(theta_i, ni, nj)
+
+r_s = refl_coeff_S(theta_i, ni, theta_j, nj)
+```
+"""
 function refl_coeff_S(theta_i, ni::ComplexF64, theta_j, nj::ComplexF64)
     #Computes the Fresnel Reflection coefficient between the i th (j-1) and the j th layers for S-polarisation
     return (ni*cos(theta_i) - nj*cos(theta_j))/(ni*cos(theta_i) + nj*cos(theta_j))
 end
 
+"""
+    refl_coeff_P(theta_i, ni::ComplexF64, theta_j, nj::ComplexF64)
+
+Compute the Fresnel reflection coefficient \$r_p\$ at the interface between layer \$i\$ and layer \$j\$ 
+for **P-polarization** (TM mode).
+
+The reflection coefficient is defined by the formula:
+
+\$\$r_p = \frac{n_i cos(\theta_j) - n_j cos(\theta_i)}{n_i cos(\theta_j) + n_j cos(\theta_i)}\$\$
+
+# Arguments
+- `theta_i`: The angle of incidence in the first layer \$i\$ (radians).
+- `ni`: The complex refractive index of the incident layer \$n_i\$.
+- `theta_j`: The angle of refraction in the second layer \$j\$ (radians).
+- `nj`: The complex refractive index of the transmitted layer \$n_j\$.
+
+# Returns
+- A `ComplexF64` representing the amplitude reflection coefficient.
+"""
 function refl_coeff_P(theta_i, ni::ComplexF64, theta_j, nj::ComplexF64)
     #Computes the Fresnel Reflection coefficient between the i th (j-1) and the j th layers for P-polarisation
     return (ni*cos(theta_j) - nj*cos(theta_i))/(ni*cos(theta_j) + nj*cos(theta_i))
 end
 
-# Fresnel Transmition Coefficients for P & S polarisation
+"""
+    trans_coeff_S(theta_i, n_i::ComplexF64, theta_j, n_j::ComplexF64)
 
+Compute the Fresnel transmission coefficient \$t_s\$ at the interface between layer \$i\$ and layer \$j\$ 
+for **S-polarization** (TE mode).
+
+The transmission coefficient is defined by the formula:
+
+\$\$t_s = \frac{2 n_i cos(\theta_i)}{n_i cos(\theta_i) + n_j cos(\theta_j)}\$\$
+
+# Arguments
+- `theta_i`: The angle of incidence in the first layer \$i\$ (radians).
+- `n_i`: The complex refractive index of the incident layer \$n_i\$.
+- `theta_j`: The angle of refraction in the second layer \$j\$ (radians).
+- `n_j`: The complex refractive index of the transmitted layer \$n_j\$.
+
+# Returns
+- A `ComplexF64` representing the amplitude transmission coefficient.
+"""
 function trans_coeff_S(theta_i, n_i::ComplexF64, theta_j, n_j::ComplexF64)
     #Computes the Fresnel Transmission coefficient between the i th (j-1) and the j th layers for S-polarisation
     return (2*n_i*cos(theta_i))/(n_i*cos(theta_i) + n_j*cos(theta_j))
 end
 
+"""
+    trans_coeff_P(theta_i, n_i::ComplexF64, theta_j, n_j::ComplexF64)
+
+Compute the Fresnel transmission coefficient \$t_p\$ at the interface between layer \$i\$ and layer \$j\$ 
+for **P-polarization** (TM mode).
+
+The transmission coefficient is defined by the formula:
+
+\$\$t_p = \frac{2 n_i cos(\theta_i)}{n_i cos(\theta_j) + n_j cos(\theta_i)}\$\$
+
+# Arguments
+- `theta_i`: The angle of incidence in the first layer \$i\$ (radians).
+- `n_i`: The complex refractive index of the incident layer \$n_i\$.
+- `theta_j`: The angle of refraction in the second layer \$j\$ (radians).
+- `n_j`: The complex refractive index of the transmitted layer \$n_j\$.
+
+# Returns
+- A `ComplexF64` representing the amplitude transmission coefficient.
+"""
 function trans_coeff_P(theta_i, n_i::ComplexF64, theta_j, n_j::ComplexF64)
     #Computes the Fresnel Transmission coefficient between the i th (j-1) and the j th layers for S-polarisation
     return (2*n_i*cos(theta_i))/(n_i*cos(theta_j) + n_j*cos(theta_i))
