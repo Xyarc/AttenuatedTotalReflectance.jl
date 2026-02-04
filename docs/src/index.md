@@ -38,4 +38,4 @@ p2 = plot(angles_deg, fp,
 
 plot(p1, p2, layout=(1, 2), size=(900, 400), xlabel="Angle (deg)",gridstyle = :dash, gridlinewidth = 3, margin=5Plots.mm)
 ```
-![Example simulation of silver film on a glass prism. Characteristic Surface plasmon response is observed](/assets/Quickstart.png)
+![Example simulation of silver film on a glass prism. Characteristic Surface plasmon response is observed](assets/Quickstart.png)
