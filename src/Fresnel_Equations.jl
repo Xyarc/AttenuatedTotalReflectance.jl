@@ -177,7 +177,10 @@ function compute_transfer_coefficients(stack::Vector, theta::Number, wavelength:
     
     # 2. Initialise Variables with Static Types for Efficiency
     # SMatrix{Rows, Cols, Type, TotalElements}
-    identity_2x2 = one(SMatrix{2, 2, ComplexF64, 4})
+    identity_2x2 = SMatrix{2, 2, ComplexF64, 4}(
+        1.0 + 0.0im, 0.0 + 0.0im,
+        0.0 + 0.0im, 1.0 + 0.0im
+    )
     
     C  = identity_2x2
     D0 = identity_2x2
@@ -190,8 +193,6 @@ function compute_transfer_coefficients(stack::Vector, theta::Number, wavelength:
    
     # Holding Variables for Complex Refractive index of the zeroth level, layer below {i} and layer above {j}
     n0 = complex_n(stack[1].n, stack[1].k)
-    
-    
     
     #3. Iterative Computation over all layers in the stack
     for i in 1:length(stack)
@@ -206,7 +207,7 @@ function compute_transfer_coefficients(stack::Vector, theta::Number, wavelength:
             # Create a static matrix for the first interface
             M = SMatrix{2, 2, ComplexF64, 4}(
                 1.0,  r_ij, 
-                r_ij, 1.0
+                r_ij,  1.0
             )
         else
             ni = complex_n(stack[i-1].n, stack[i-1].k)
@@ -217,17 +218,20 @@ function compute_transfer_coefficients(stack::Vector, theta::Number, wavelength:
             t_ij = trans_func(theta_i, ni, theta_j, nj)
 
             # Create a static matrix for propagation + interface
-            # Note: SMatrix construction is column-major by default
+            # Note: SMatrix construction is **column-major** by default
             c_neg = cis(-phi)
             c_pos = cis(phi)
             M = SMatrix{2, 2, ComplexF64, 4}(
                 c_neg,        r_ij * c_pos, 
                 r_ij * c_neg, c_pos
             )
+
+            
         end
 
         # Update total transfer matrix
-        C = M * C
+        
+        C *= M 
         t_total *= t_ij
 
         # 4. Handle Partial Coefficients
@@ -238,11 +242,11 @@ function compute_transfer_coefficients(stack::Vector, theta::Number, wavelength:
 
         elseif i > layer_j && layer_j != 0
             # Assign partial transfer matrix and transmission coeffiecents above target layer
-            Dj = M * Dj
+            Dj *= M
             tj *= t_ij
         end
     end
-
+    
     return C, D0, Dj, t_total, t0, tj
 end
 
@@ -304,20 +308,24 @@ function angular_ATR(stack::Vector, theta_range::AbstractVector, wavelength::Num
         angle_end    = snells_law(angle, n0, n_end)
         theta_target = snells_law(angle, n0, n_target)
         
-        a = real((conj(n_end) * cos(angle_end)) / (conj(n0) * cos(angle)))
+        if S
+            a = real((n_end * cos(angle_end)) / (n0 * cos(angle)))
+        else
+            a = real((conj(n_end) * cos(angle_end)) / (conj(n0) * cos(angle)))
+        end
 
         C, D0, Dj, t_total, t0, tj = compute_transfer_coefficients(
             stack, angle, wavelength, layer_target; S=S
         )
 
-        inv_c11 = 1.0 / C[1,1]
-        reflectivity[i]  = abs2(C[2,1] * inv_c11)
-        transmittance[i] = a * abs2(t_total * inv_c11)
+        #inv_c11 = 1.0 / C[1,1]
+        reflectivity[i] = abs2(C[2, 1] / C[1, 1])
+        transmittance[i] = a * abs2(t_total / C[1, 1])
           
         # Field Enhancement Logic
         kj_z = wave_vector_Z(wavelength, n_target, theta_target)
-        ej_f = t0 * (Dj[1,1] * inv_c11) * e0_f
-        ej_b = t0 * (Dj[2,1] * inv_c11) * e0_f
+        ej_f = t0 * (Dj[1, 1] / C[1, 1]) * e0_f
+        ej_b = t0 * (Dj[2, 1] / C[1, 1]) * e0_f
 
         e_f = ej_f * cis(kj_z * d)
         e_b = ej_b * cis(-kj_z * d)

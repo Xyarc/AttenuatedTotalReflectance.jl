@@ -1,10 +1,3 @@
-# AttenuatedTotalReflectance.jl
-
-A Julia package for simulating Attenuated Total Reflection (ATR) through the Transfer Matrix Method (TMM) in multilayer thin films. This module provides as a convient, flexible and fast method of preforming attenuated total reflection simulations.
-
-## Quick Start
-
-```julia
 using AttenuatedTotalReflectance
 using Plots
 
@@ -38,5 +31,3 @@ p2 = plot(angles_deg, fp,
     ylabel="|E/E₀|²", lc=:purple, lw=2,grid=true, title="Electric Field Enhancement\nat 100 nm from $(stack[2].material) Surface")
 
 plot(p1, p2, layout=(1, 2), size=(900, 400), xlabel="Angle (deg)",gridstyle = :dash, gridlinewidth = 3, margin=5Plots.mm)
-```
-![Example simulation of silver film on a glass prism. Characteristic Surface plasmon response is observed](/assets/Quickstart.png)
