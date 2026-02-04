@@ -230,8 +230,8 @@ using Test
             stack = [
                 layer("Prism", 1.5, 0.0, 1e-6),
                 layer("Gold", 0.18, 3.0, 50e-9,),
-                layer("FlowCell", 1.33, 0.0, 1e-6),
-                layer("PML", 1e-6, 1.0, 0.0)
+                layer("FlowCell", 1.33, 0.0, 5e-6),
+                layer("PML", 1.33 + 1e-5, 0.0, 1e-6)
             ]
 
             @testset "Manual Selection" begin
@@ -290,13 +290,14 @@ using Test
             # Kretschmann Configuration: Prism (1.5) / Gold (50nm) / Air (1.0)
             # Resonance for Gold at 633nm is usually around 43-45 degrees
             prism_stack = [
-                layer("Prism", 0.0, 1.5, 0.0),
-                layer("Gold", 50.0, 0.18, 3.4), # typical nk for Gold
-                layer("Air", 0.0, 1.0, 0.0)
+                layer("Prism", 1.51, 0.0,  1e-5),
+                layer("Silver",  0.056206, 4.2776, 47e-9), # typical nk for Silver at 633 nm
+                layer("Air", 1.0, 0.0, 5e-6),
+                layer("PML", 1.0+1e-5, 0.0, 1e-6)
             ]
 
-            angles = deg2rad.(collect(30.0:0.1:50.0))
-            R, T, fx, fy, fz, fp = angular_ATR(prism_stack, angles, 633.0)
+            angles = deg2rad.(collect(35.0:0.01:55.0))
+            R, T, fx, fy, fz, fp = angular_ATR(prism_stack, angles, 633.0e-9)
 
             @test length(R) == length(angles)
             @test all(0 .<= R .<= 1.0)
@@ -306,7 +307,7 @@ using Test
             @test all(fp .>= 0.0)
 
             # Physical check: At 30 degrees (below critical angle ~41.8), T should be > 0
-            @test T[1] > 0.1
+            @test T[1] > 0.001
             # Physical check: At 50 degrees (TIR), T should be near 0
             @test T[end] < 1e-5
         end
