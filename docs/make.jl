@@ -8,8 +8,7 @@ makedocs(
        
         "Home" => "index.md",
         "Manual" => [
-            "Getting Started" => "guide.md",
-            "Physics Background" => "physics.md"
+            "Physical Background" => "physics.md"
         ],
         "API Reference" => "api.md"  # You can put all your @docs blocks here
     ]

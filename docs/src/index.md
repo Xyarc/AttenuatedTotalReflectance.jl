@@ -2,6 +2,13 @@
 
 A Julia package for simulating Attenuated Total Reflection (ATR) through the Transfer Matrix Method (TMM) in multilayer thin films. This module provides as a convient, flexible and fast method of preforming attenuated total reflection simulations.
 
+## Installation
+This package is registered in the official Julia General Registry. You can install it by entering the Pkg REPL mode (type `]`) and running:
+
+```julia
+pkg> add AttenuatedTotalReflectance
+```
+
 ## Quick Start
 ```julia
 using AttenuatedTotalReflectance
