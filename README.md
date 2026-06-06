@@ -4,7 +4,7 @@
 [![Coverage](https://codecov.io/gh/Xyarc/AttenuatedTotalReflectance.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/Xyarc/AttenuatedTotalReflectance.jl)
 [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://Xyarc.github.io/AttenuatedTotalReflectance.jl/stable/)
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://Xyarc.github.io/AttenuatedTotalReflectance.jl/dev/)
-
+[![DOI](https://zenodo.org/badge/1135740296.svg)](https://doi.org/10.5281/zenodo.20571253)
 
 `AttenuatedTotalReflectance.jl` is a fast, flexible, and convenient Julia package for simulating **Attenuated Total Reflection (ATR)** using the **Transfer Matrix Method (TMM)** in multilayer thin films. Whether you are modeling surface plasmon resonance (SPR) in a Kretschmann configuration or designing complex optical coatings, this package provides a high-performance backend to calculate reflectance and transmission.
 
